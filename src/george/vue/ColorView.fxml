@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="george.controller.ColorController">
+   <children>
+      <Pane layoutX="14.0" layoutY="14.0" prefHeight="274.0" prefWidth="272.0">
+         <children>
+            <Slider fx:id="sliderRed" layoutX="15.0" layoutY="37.0" max="255.0" prefHeight="15.0" prefWidth="193.0" />
+            <TextField fx:id="textFieldRed" layoutX="219.0" layoutY="31.0" prefHeight="27.0" prefWidth="40.0" />
+            <Slider fx:id="sliderGreen" layoutX="14.0" layoutY="93.0" max="255.0" prefHeight="15.0" prefWidth="193.0" />
+            <TextField fx:id="textFieldGreen" layoutX="219.0" layoutY="87.0" prefHeight="27.0" prefWidth="40.0" />
+            <Slider fx:id="sliderBlue" layoutX="15.0" layoutY="146.0" max="255.0" prefHeight="15.0" prefWidth="193.0" />
+            <TextField fx:id="textFieldBlue" layoutX="219.0" layoutY="140.0" prefHeight="27.0" prefWidth="40.0" />
+            <Label layoutX="14.0" layoutY="14.0" text="Red" />
+            <Label layoutX="14.0" layoutY="70.0" text="Green" />
+            <Label layoutX="14.0" layoutY="123.0" text="Blue" />
+         </children>
+      </Pane>
+      <TextField fx:id="hexColor" layoutX="303.0" layoutY="45.0" />
+      <Label layoutX="303.0" layoutY="28.0" text="Hex" />
+      <Pane fx:id="paneColorPalette1" layoutX="290.0" layoutY="150.0" prefHeight="35.0" prefWidth="35.0" style="-fx-background-color: #334422;" />
+      <Pane fx:id="paneColorPalette2" layoutX="330.0" layoutY="150.0" prefHeight="35.0" prefWidth="35.0" style="-fx-background-color: #334422;" />
+      <Pane fx:id="paneColorPalette3" layoutX="370.0" layoutY="150.0" prefHeight="35.0" prefWidth="35.0" style="-fx-background-color: #334422;" />
+      <Pane fx:id="paneColorPalette4" layoutX="410.0" layoutY="150.0" prefHeight="35.0" prefWidth="35.0" style="-fx-background-color: #334422;" />
+      <Pane fx:id="paneColorPalette5" layoutX="450.0" layoutY="150.0" prefHeight="35.0" prefWidth="35.0" style="-fx-background-color: #334422;" />
+      <Pane fx:id="paneColor" layoutX="290.0" layoutY="80.0" prefHeight="65.0" prefWidth="195.0" />
+      <Canvas fx:id="myCanvas" height="274.0" layoutX="35.0" layoutY="200.0" width="535.0">
+         <cursor>
+            <Cursor fx:constant="CROSSHAIR" />
+         </cursor>
+         <effect>
+            <ColorAdjust />
+         </effect>
+      </Canvas>
+   </children>
+
+</AnchorPane>
