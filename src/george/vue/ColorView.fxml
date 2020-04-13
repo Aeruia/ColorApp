@@ -6,7 +6,7 @@
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="george.controller.ColorController">
+<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="george.controller.ColorController">
    <children>
       <Pane layoutX="14.0" layoutY="14.0" prefHeight="274.0" prefWidth="272.0">
          <children>
@@ -29,7 +29,10 @@
       <Pane fx:id="paneColorPalette4" layoutX="410.0" layoutY="150.0" prefHeight="35.0" prefWidth="35.0" style="-fx-background-color: #334422;" />
       <Pane fx:id="paneColorPalette5" layoutX="450.0" layoutY="150.0" prefHeight="35.0" prefWidth="35.0" style="-fx-background-color: #334422;" />
       <Pane fx:id="paneColor" layoutX="290.0" layoutY="80.0" prefHeight="65.0" prefWidth="195.0" />
-      <Canvas fx:id="myCanvas" height="274.0" layoutX="35.0" layoutY="200.0" width="535.0">
+      <Label layoutX="516.0" layoutY="28.0" text="Width" />
+      <Slider fx:id="sliderWidth" blockIncrement="1.0" layoutX="519.0" layoutY="45.0" majorTickUnit="3.0" max="10.0" min="1.0" minorTickCount="1" orientation="VERTICAL" showTickLabels="true" value="1.0" />
+      <Button fx:id="buttonClear" alignment="CENTER" layoutX="274.0" layoutY="542.0" mnemonicParsing="false" text="Clear" />
+      <Canvas fx:id="myCanvas" height="274.0" layoutX="36.0" layoutY="257.0" width="535.0">
          <cursor>
             <Cursor fx:constant="CROSSHAIR" />
          </cursor>
@@ -37,6 +40,7 @@
             <ColorAdjust />
          </effect>
       </Canvas>
+      <Button fx:id="buttonSave" layoutX="274.0" layoutY="215.0" mnemonicParsing="false" text="Save" />
    </children>
 
 </AnchorPane>

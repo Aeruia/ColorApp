@@ -16,6 +16,7 @@ public class Main extends Application {
         Parent root = fxmlLoader.load();
         primaryStage.setTitle("ColorApp");
         ColorController controller = fxmlLoader.getController();
+        controller.setStage(primaryStage);
         controller.drawShapes();
         primaryStage.setScene(new Scene(root, 600, 600));
         primaryStage.show();

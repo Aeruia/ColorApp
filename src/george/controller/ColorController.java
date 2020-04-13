@@ -1,26 +1,38 @@
 package george.controller;
 
+import application.Main;
 import george.model.Color;
 import george.model.Palette;
-import javafx.event.EventHandler;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.ArcType;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
+import javax.imageio.ImageIO;
+import java.awt.image.RenderedImage;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ColorController implements Initializable {
     private Color color;
     private Palette palette;
+    private GraphicsContext gc;
+    private Stage stage;
 
     @FXML
     private Slider sliderRed;
@@ -30,6 +42,9 @@ public class ColorController implements Initializable {
 
     @FXML
     private Slider sliderBlue;
+
+    @FXML
+    private Slider sliderWidth;
 
     @FXML
     private TextField textFieldRed;
@@ -63,13 +78,17 @@ public class ColorController implements Initializable {
 
     @FXML
     private Canvas myCanvas;
-    private GraphicsContext gc;
 
+    @FXML
+    private Button buttonClear;
+
+    @FXML
+    private Button buttonSave;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        color = new Color(105, 84, 32);
+        color = new Color(214, 193, 193);
         palette = new Palette(color);
         updateUI();
         sliderRed.valueProperty()
@@ -85,11 +104,23 @@ public class ColorController implements Initializable {
         textFieldBlue.textProperty()
                 .addListener((observable, oldValue, newValue) -> setColor(COLOR.BLUE, Integer.valueOf(newValue)));
         hexColor.setOnKeyPressed(keyEvent -> handleEvent(keyEvent));
-        //myCanvas.setOnMousePressed( e -> mousePressed(e) );
-        //myCanvas.setOnMouseDragged( e -> mouseDragged(e) );
-        //myCanvas.setOnMouseReleased( e -> mouseReleased(e) );
+        buttonClear.setOnAction(actionEvent -> {
+            this.refresh();
+        });
+        buttonSave.setOnAction(actionEvent -> {
+            this.saveImage();
+        });
     }
-
+    private void refresh() {
+        gc.clearRect(0, 0, myCanvas.getWidth(), myCanvas.getHeight());
+        double canvasWidth = gc.getCanvas().getWidth();
+        double canvasHeight = gc.getCanvas().getHeight();
+        gc.strokeRect(
+                0,              //x of the upper left corner
+                0,              //y of the upper left corner
+                canvasWidth,    //width of the rectangle
+                canvasHeight);  //height of the rectangle
+    }
     // when pressed enter checks hexValue and updates UI
     private void handleEvent(KeyEvent keyEvent) {
         if(keyEvent.getCode().getCode()==10){
@@ -119,6 +150,10 @@ public class ColorController implements Initializable {
         updateUI();
     }
 
+    public void setStage(Stage primaryStage) {
+        this.stage = primaryStage;
+    }
+
     private enum COLOR {
         RED, GREEN, BLUE;
     }
@@ -141,27 +176,50 @@ public class ColorController implements Initializable {
     }
     public void drawShapes() {
         gc = myCanvas.getGraphicsContext2D();
-        gc.setFill(Paint.valueOf(color.getHexValue()));
-        gc.setStroke(Paint.valueOf(color.getHexValue()));
-        gc.setLineWidth(5);
-        gc.strokeLine(40, 10, 10, 40);
-        gc.fillOval(10, 60, 30, 30);
-        gc.strokeOval(60, 60, 30, 30);
-        gc.fillRoundRect(110, 60, 30, 30, 10, 10);
-        gc.strokeRoundRect(160, 60, 30, 30, 10, 10);
-        gc.fillArc(10, 110, 30, 30, 45, 240, ArcType.OPEN);
-        gc.fillArc(60, 110, 30, 30, 45, 240, ArcType.CHORD);
-        gc.fillArc(110, 110, 30, 30, 45, 240, ArcType.ROUND);
-        gc.strokeArc(10, 160, 30, 30, 45, 240, ArcType.OPEN);
-        gc.strokeArc(60, 160, 30, 30, 45, 240, ArcType.CHORD);
-        gc.strokeArc(110, 160, 30, 30, 45, 240, ArcType.ROUND);
-        gc.fillPolygon(new double[]{10, 40, 10, 40},
-                new double[]{210, 210, 240, 240}, 4);
-        gc.strokePolygon(new double[]{60, 90, 60, 90},
-                new double[]{210, 210, 240, 240}, 4);
-        gc.strokePolyline(new double[]{110, 140, 110, 140},
-                new double[]{210, 210, 240, 240}, 4);
-
+        double canvasWidth = gc.getCanvas().getWidth();
+        double canvasHeight = gc.getCanvas().getHeight();
+        gc.strokeRect(
+                0,              //x of the upper left corner
+                0,              //y of the upper left corner
+                canvasWidth,    //width of the rectangle
+                canvasHeight);  //height of the rectangle
+        myCanvas.setOnMousePressed(mouseEvent -> {
+            initDraw();
+            gc.beginPath();
+            gc.moveTo(mouseEvent.getX(), mouseEvent.getY());
+            gc.stroke();
+        });
+        myCanvas.setOnMouseDragged(mouseEvent -> {
+            initDraw();
+            gc.lineTo(mouseEvent.getX(), mouseEvent.getY());
+            gc.stroke();
+        });
     }
+    private void initDraw(){
+        gc.setFill(Paint.valueOf(palette.getPalette().get(0).getHexValue()));
+        gc.setStroke(Paint.valueOf(color.getHexValue()));
+        gc.setLineWidth(sliderWidth.getValue());
+    }
+    private void saveImage(){
+        FileChooser fileChooser = new FileChooser();
 
+        //Set extension filter
+        FileChooser.ExtensionFilter extFilter =
+                new FileChooser.ExtensionFilter("png files (*.png)", "*.png");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        //Show save file dialog
+        File file = fileChooser.showSaveDialog(this.stage);
+
+        if(file != null){
+            try {
+                WritableImage writableImage = new WritableImage((int)gc.getCanvas().getWidth(), (int)gc.getCanvas().getHeight());
+                myCanvas.snapshot(null, writableImage);
+                RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+                ImageIO.write(renderedImage, "png", file);
+            } catch (IOException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 }
